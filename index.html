@@ -34,18 +34,22 @@
     </nav>
 
     <div class="container my-3">
-        <h1>Welcome back in your notes</h1>
+        <h1 class="card-title">Welcome back in your notes</h1>
         <div class="card">
             <div class="card-body">
+                <div class="form-group">
+                    <h5 class="card-title">Add Title</h5>
+                    <input type="text" class="form-control" id="addTitle" aria-describedby="Titlehelp" placeholder="Add Title">
+                  </div>
                 <h5 class="card-title">Add Notes</h5>
                 <div class="form-group">
                     <textarea class="form-control" id="addTxt" rows="3"></textarea>
                 </div>
-                <button class="btn btn-primary" id='addBtn'>Add Note</button>
+                <button class="btn btn-primary" id='addBtn'>Add</button>
             </div>
         </div>
         <hr>
-        <h1>Your Notes</h1>
+        <h5 class="card-title">Your Notes</h5>
         <hr>
         <div id="notes" class="row mx-2 my-2 container-fluid"></div>
 
@@ -62,6 +66,7 @@
         integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
         crossorigin="anonymous"></script>
     <script src="app.js"></script>
+
 </body>
 
 </html>
