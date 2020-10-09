@@ -4,6 +4,7 @@ let addBtn = document.getElementById('addBtn');
 
 addBtn.addEventListener('click', function (e) {
     let addTxt = document.getElementById('addTxt');
+    let addTitle = document.getElementById('addTitle');
     let notes = localStorage.getItem('notes');
     if (notes == null) {
         notesObj = [];
@@ -11,10 +12,18 @@ addBtn.addEventListener('click', function (e) {
     else {
         notesObj = JSON.parse(notes);
     }
-    notesObj.push(addTxt.value);
+    let myObj = {
+        title: addTitle.value,
+        text: addTxt.value,
+        cardId: "card"+notesObj.length,
+        index: notesObj.length,
+        fav:''
+    }
+
+    notesObj.push(myObj);
     localStorage.setItem('notes', JSON.stringify(notesObj));
     addTxt.value = '';
-
+    addTitle.value = '';
     showNotes();
 });
 
@@ -30,10 +39,10 @@ function showNotes() {
     let html = '';
     notesObj.forEach(function(element,index) {
         html += `
-        <div  id="card${index}" class="noteCard my-2 mx-2 card" style="width: 18rem;">
+        <div  id="${"card"+index}" class="noteCard my-2 mx-2 card" value="${index}" style="width: 18rem">
                 <div class="card-body">
-                    <h5 class="card-title">Note ${index+1}</h5>
-                    <p class="card-text">${element}</p>
+                    <h5 class="card-title">${element.title}</h5>
+                    <p class="card-text">${element.text}</p>
                     <div class='cardBtn'>
                         <button id="${index}" onclick="deleteNode(this.id)"  class="btn btn-primary">Delete</button>
                         <button id="${"btn"+index}" type='button' onclick="makeFav(this.id)"  class='btn btn-outline-danger' value="true">
@@ -44,22 +53,29 @@ function showNotes() {
                     </div>
                 </div>
         </div>`;
-        
-    });
+           
+ });
     let notesEle = document.getElementById('notes');
 
     if(notesObj.length != 0){
         notesEle.innerHTML = html;
     }
     else{
-        notesEle.innerHTML = `Nothing to show please add notes`;
+        notesEle.innerHTML = `<h5 class="card-title">Nothing to show please add notes</h5>`;
     }
+
+    notesObj.forEach(function(element,index){
+        if(element.fav=="true"){
+            let ele = document.getElementById(element.cardId);
+            ele.style.backgroundColor = "#91ff00a1";
+        }
+    });
+    
 }
 
 // function to deleteing a node
 
 function deleteNode(index){
-    console.log('I am Deleting node number :',index +1);
     let notes = localStorage.getItem('notes');
     if (notes == null) {
         notesObj = [];
@@ -77,11 +93,11 @@ function deleteNode(index){
 let search = document.getElementById('searchTxt');
 search.addEventListener('input',function(element){
     let inputVal = search.value
-    console.log(inputVal);
+    
     let noteCards = document.getElementsByClassName('noteCard');
     Array.from(noteCards).forEach(function(element){
         let cardTxt = element.getElementsByTagName('p')[0].innerText;
-        console.log(cardTxt);
+        
         if(cardTxt.includes(inputVal)){
             element.style.display = 'block';
         }
@@ -96,13 +112,23 @@ search.addEventListener('input',function(element){
 
 function makeFav(idx){
     let x = document.getElementById(idx);
+    let card = x.parentNode.parentNode.parentNode;
+    let cardId = card.id;
+    let index = cardId.match(/\d+/)[0];
+    notesObj[index].fav = "true";
+    
     if(x.value == "true"){
-        x.parentNode.parentNode.parentNode.style.backgroundColor = "#91ff00a1";
+        card.style.backgroundColor = "#91ff00a1";
         x.value ="false";
+        notesObj[index].fav = "true";
+        localStorage.setItem('notes', JSON.stringify(notesObj));
+
     }
     else{
         x.parentNode.parentNode.parentNode.style.backgroundColor = "white";
         x.value ="true";
+        notesObj[index].fav = "fasle";
+        localStorage.setItem('notes', JSON.stringify(notesObj));
     }
     
     
